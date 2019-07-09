@@ -5,12 +5,15 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
-	<title>{{ config('app.name', 'Lucid') }}</title>
+  <!-- <title>{{ config('app.name', 'Lucid') }}</title> -->
+  <title>Lucid</title>
+  <link rel="short icon" type="image/png" sizes="16x16" href="{{ asset('img/luci-logo.png') }}">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800&display=swap" rel="stylesheet" />
 	<link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet" />
 <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+<link href="{{ asset('css/main-style.css') }}" rel="stylesheet">
 <link href="{{ asset('css/tabletcss.css') }}" rel="stylesheet">
 </head>
 <body>
@@ -37,8 +40,10 @@
                 @csrf
             </form>
             @endguest
-						<a class="dropdown-item" href="#">Report A Bug</a>
-						<a class="dropdown-item" href="#">Get Lucid</a>
+                    <a class="dropdown-item" href="/home">Home</a>
+                    <a href="/settings" class="dropdown-item">Settings</a>
+                    <a class="dropdown-item" href="#">Report A Bug</a>
+						
 					</div>
 				</li>
 			</ul>
@@ -65,10 +70,10 @@
     <div class="divider"></div>
     <div class="sidebar-nav">
       <ul>
-        <li><a href="#">Posts</a></li>
+        <li><a href="/posts">Posts</a></li>
         <li><a href="#">Videos</a></li>
         <li><a href="#">Contact</a></li>
-        <li><a href="#">Thoughts</a></li>
+        <li><a href="/microblog">Thoughts</a></li>
       </ul>
     </div>
     <!-- Follow Modal Trigger -->
@@ -82,7 +87,7 @@
           <div class="modal-content">
             <div class="modal-body">
               <div>
-                <img src="./assets/img/following-the-idea.png" class="img-fluid" />
+                <img src="{{ asset('img/following-the-idea.png') }}" class="img-fluid" />
                 <h4 class="text-main">FOLLOW ME</h4>
                 <p class="small"><em>Do you have or would love to have Lucid installed on your domain?<br /> Click the button below to follow me</em></p>
                 <button class="btn btn-primary">Follow me on Lucid</button>

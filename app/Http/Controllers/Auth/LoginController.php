@@ -1,9 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace Lucid\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use Lucid\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use File;
+use Socialite;
+use Auth;
+use Lucid\User;
+use Lucid\user_settings;
 
 class LoginController extends Controller
 {
@@ -36,4 +41,53 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+    public function redirectToProvider($provider)
+    {
+        return Socialite::driver($provider)->redirect();
+    }
+
+    /**
+     * Obtain the user information from GitHub.
+     *
+     * @return Response
+     */
+    public function handleProviderCallback($provider)
+    {
+      $userSocial =   Socialite::driver($provider)->stateless()->user();
+      $users       =   $this->findOrCreateUser($userSocial, $provider);
+
+          Auth::login($users, true);
+          $username = preg_split('/ +/', $users->name);
+          $path = storage_path().'/'.$username[0].'/';
+          File::makeDirectory($path);
+
+          $this->store_settings($path, $users->id);
+          return redirect()->to("/{$username[0]}/home");
+    }
+
+
+public function findOrCreateUser($user, $provider){
+    $users       =   User::where('provider_id', $user->id)->first();
+    if($users){
+        return $users;
+    }
+        return User::create([
+            'name'          => $user->name,
+            'email'         => $user->email,
+            'image'         => $user->avatar,
+            'provider_id'   => $user->id,
+            'provider'      => $provider,
+        ]);
+
+        return $user;
+}
+
+public function store_settings($path, $user_id)
+{
+    return  user_settings::create([
+        'user_id' => $user_id,
+        'user_path' => $path,
+        'setting_path' =>"",
+    ]);
+}
 }
